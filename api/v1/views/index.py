@@ -24,20 +24,15 @@ def stat():
     This route retrieves the count of each object type
     and returns a JSON response.
     """
-    try:
-        stats = {
-            "amenities": storage.count("Amenity"),
-            "cities": storage.count("City"),
-            "places": storage.count("Place"),
-            "reviews": storage.count("Review"),
-            "states": storage.count("State"),
-            "users": storage.count("User")
-        }
-        response = jsonify(stats)
-        response.status_code = 200
+    stats = {
+        "amenities": storage.count("Amenity"),
+        "cities": storage.count("City"),
+        "places": storage.count("Place"),
+        "reviews": storage.count("Review"),
+        "states": storage.count("State"),
+        "users": storage.count("User")
+    }
+    response = jsonify(stats)
+    response.status_code = 200
 
-        return response
-    except Exception as e:
-    """Handle exception"""
-        print(f"An error occurred: {e}")
-        return jsonify({"error": "Internal server error"}), 500
+    return response
