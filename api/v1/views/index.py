@@ -7,6 +7,7 @@ from api.v1.views import app_views
 from flask import jsonify
 from models import storage
 
+
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status():
     """
@@ -23,15 +24,20 @@ def stat():
     This route retrieves the count of each object type
     and returns a JSON response.
     """
-    stats = {
-        "amenities": storage.count("Amenity"),
-        "cities": storage.count("City"),
-        "places": storage.count("Place"),
-        "reviews": storage.count("Review"),
-        "states": storage.count("State"),
-        "users": storage.count("User")
-    }
-    response = jsonify(stats)
-    response.status_code = 200
+    try:
+        stats = {
+            "amenities": storage.count("Amenity"),
+            "cities": storage.count("City"),
+            "places": storage.count("Place"),
+            "reviews": storage.count("Review"),
+            "states": storage.count("State"),
+            "users": storage.count("User")
+        }
+        response = jsonify(stats)
+        response.status_code = 200
 
-    return response
+        return response
+    except Exception as e:
+    """Handle exception"""
+        print(f"An error occurred: {e}")
+        return jsonify({"error": "Internal server error"}), 500
