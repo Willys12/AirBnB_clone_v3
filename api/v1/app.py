@@ -4,7 +4,7 @@ Flask web application setup.
 This module initializes the Flask app, registers blueprints,
 and sets up teardown methods and server configuration.
 """
-from flask import Flask
+from flask import Flask, jsonify, Blueprint
 from models import storage
 from api.v1.views import app_views
 from flask_cors import CORS
@@ -13,10 +13,8 @@ import os
 
 # Initialize Flask application
 app = Flask(__name__)
-"""Flask application instance"""
-a_host = os.getenv('HBNB_API_HOST', '0.0.0.0')
-a_port = int(os.getenv('HBNB_API_PORT', '5000'))
-CORS(app, resources={'/*': {'origins': a_host}})
+
+CORS(app, resources={r'/*': {'origins': '0.0.0.0'}})
 app.register_blueprint(app_views)
 
 
@@ -37,6 +35,5 @@ def resource_not_found(e):
 
 
 if __name__ == "__main__":
-    a_host = os.getenv('HBNB_API_HOST', '0.0.0.0')
-    a_port = int(os.getenv('HBNB_API_PORT', '5000'))
-    app.run(host=a_host, port=a_port, threaded=True)
+    app.run(host=os.getenv('HBNB_API_HOST', '0.0.0.0'),
+            port=int(os.getenv('HBNB_API_PORT', '5000')), threaded=True)
