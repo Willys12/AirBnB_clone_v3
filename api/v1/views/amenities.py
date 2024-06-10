@@ -29,7 +29,7 @@ def get_amenities(amenity_id=None):
             return jsonify(amenity.to_dict())
         raise NotFound()
     amenities = storage.all(Amenity).values()
-    amenities = list(map(lambda x: x.to_dict(), amenities))
+    amenities = list(filter(lambda x: x.to_dict(), amenities))
     return jsonify(amenities)
 
 
