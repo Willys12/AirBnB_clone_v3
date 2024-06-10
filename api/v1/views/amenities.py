@@ -63,7 +63,7 @@ def create_amenity():
     --------
         new Amenity object in JSON format with status code 201
     """
-    data = request.get_json
+    data = request.get_json()
     if not isinstance(data, dict):
         raise BadRequest(description='Not a JSON')
     if 'name' not in data:
