@@ -5,7 +5,7 @@ This module handles all default RESTFul API actions for State objects.
 """
 
 from flask import jsonify, request, abort
-from models import storage
+# from models import storage
 from models.state import State
 from api.v1.views import app_views
 
@@ -17,9 +17,8 @@ def get_states():
     Returns:
         A JSON response containing the list of all state objects.
     """
-    all_states = storage.all(State).values()
-    state_list = [state.to_dict() for state in all_states]
-    return jsonify(state_list)
+    states = [state.to_dict() for state in State.all()]
+    return jsonify(states)
 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
@@ -31,8 +30,8 @@ def get_state(state_id):
     Returns:
         A JSON response containing the State object.
     """
-    state = storage.get(State, state_id)
-    if not state:
+    state = State.get(state_id)
+    if state is None:
         abort(404)
     return jsonify(state.to_dict())
 
@@ -47,11 +46,10 @@ def delete_state(state_id):
     Returns:
         An empty JSON response with status code 200 if successful.
     """
-    state = storage.get(State, state_id)
-    if not state:
+    state = State.get(state_id)
+    if state is None:
         abort(404)
-    storage.delete(state)
-    storage.save()
+    state.delete()
     return jsonify({}), 200
 
 
@@ -63,10 +61,12 @@ def create_state():
         A JSON response containing the newly created State object.
     """
     if not request.json:
-        abort(400, 'Not a JSON')
-    if 'name' not in request.json:
-        abort(400, 'Missing name')
+        abort(400, description='Not a JSON')
+
     data = request.get_json()
+    if 'name' not in request.json:
+        abort(400, description='Missing name')
+
     new_state = State(**data)
     new_state.save()
     return jsonify(new_state.to_dict()), 201
@@ -81,15 +81,15 @@ def update_state(state_id):
     Returns:
         A JSON response containing the updated State object.
     """
-    state = storage.get(State, state_id)
-    if not state:
+    state = state.get(state_id)
+    if state is None:
         abort(404)
     if not request.json:
-        abort(400, 'Not a JSON')
+        abort(400, description='Not a JSON')
     data = request.get_json()
-    ignored_keys = ['id', 'created_at', 'updated_at']
+    ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
-        if key not in ignored_keys:
+        if key not in ignore_keys:
             setattr(state, key, value)
     state.save()
     return jsonify(state.to_dict()), 200
