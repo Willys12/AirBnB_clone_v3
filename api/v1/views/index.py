@@ -15,16 +15,16 @@ def status():
     the API service is running.
     Example response: {"status": "OK"}
     """
-    return jsonify({"status": "Ok"})
+    return jsonify({"status": "OK"})
 
-@app_views.route('/stat', methods=['GET'], strict_slashes=False)
-def stat():
+@app_views.route('/stats', methods=['GET'], strict_slashes=False)
+def get_stat():
     """
     Stats route.
     This route retrieves the count of each object type
     and returns a JSON response.
     """
-    stats = {
+    objects = {
         "amenities": storage.count("Amenity"),
         "cities": storage.count("City"),
         "places": storage.count("Place"),
@@ -32,7 +32,7 @@ def stat():
         "states": storage.count("State"),
         "users": storage.count("User")
     }
-    response = jsonify(stats)
+    response = jsonify(objects)
     response.status_code = 200
 
     return response
