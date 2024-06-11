@@ -89,4 +89,3 @@ class DBStorage:
         """A method to count the number of objects in storage"""
         obj_dict = models.storage.all(cls)
         return len(obj_dict)
-
