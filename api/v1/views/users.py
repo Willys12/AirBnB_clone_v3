@@ -23,7 +23,8 @@ def get_all_users():
     return jsonify([user.to_dict() for user in users])
 
 
-@app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/users/<user_id>', methods=['GET'],
+                 strict_slashes=False)
 def get_user(user_id):
     """
     Retrieves a User object by ID.
@@ -44,7 +45,8 @@ def get_user(user_id):
         abort(404)
 
 
-@app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/users/<user_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_user(user_id):
     """
     Deletes a User object.
@@ -55,7 +57,8 @@ def delete_user(user_id):
 
     Returns:
     --------
-        An empty dictionary with status code 200 if the deletion was successful.
+        An empty dictionary with status code 200 if the deletion
+        was successful.
         Raises a NotFound exception if the object does not exist.
     """
     user = storage.get(User, user_id)
@@ -75,8 +78,9 @@ def create_user():
     Returns:
     --------
         The created User object with status code 201.
-        Raises a BadRequest exception if the request body is not a valid JSON or
-        if it does not contain the required keys "email" and "password".
+        Raises a BadRequest exception if the request
+        body is not a valid JSON or if it does not contain
+        the required keys "email" and "password".
     """
     if not request.is_json:
         abort(400, description="Not a JSON")
@@ -85,13 +89,14 @@ def create_user():
         abort(400, description="Missing email")
     if "password" not in data:
         abort(400, description="Missing password")
-    
+
     user = User(**data)
     user.save()
     return jsonify(user.to_dict()), 201
 
 
-@app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/users/<user_id>', methods=['PUT'],
+                 strict_slashes=False)
 def update_user(user_id):
     """
     Updates a User object.
@@ -104,7 +109,8 @@ def update_user(user_id):
     --------
         The updated User object with status code 200.
         Raises a NotFound exception if the object does not exist.
-        Raises a BadRequest exception if the request body is not a valid JSON.
+        Raises a BadRequest exception if the
+        request body is not a valid JSON.
     """
     user = storage.get(User, user_id)
     if user:
@@ -120,6 +126,7 @@ def update_user(user_id):
         return jsonify(user.to_dict()), 200
     else:
         abort(404)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
